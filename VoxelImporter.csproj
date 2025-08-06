@@ -1,0 +1,55 @@
+<Project Sdk="Godot.NET.Sdk/4.4.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="addons\voxel_importer\Chunks\VoxChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxChunkType.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxelData.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxelModel.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxFileBuilder.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxFrame.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxGroupChild.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxGroupChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxLayerChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxMainChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxMaterialChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxRgbaChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxShapeChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxShapeModel.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxSizeChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxTransformChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Chunks\VoxXyziChunk.cs.uid" />
+    <Content Include="addons\voxel_importer\Constants\FaceOrientation.cs.uid" />
+    <Content Include="addons\voxel_importer\Constants\Faces.cs.uid" />
+    <Content Include="addons\voxel_importer\Constants\ImportOptions.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelColor.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelData.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelGroupNode.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelInstance.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelLayer.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelMaterialType.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelModel.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelNode.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelObject.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxelTransformNode.cs.uid" />
+    <Content Include="addons\voxel_importer\Data\VoxFile.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\CombineModelFunction.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\GlobalSpaceBuilder.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\KeyFrameSelector.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\MeshGenerator.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\ModelCombiner.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\ModelFunctions.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\SearchedVoxelObject.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\VoxelCuller.cs.uid" />
+    <Content Include="addons\voxel_importer\Functions\VoxelImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\CombinedMeshImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\CombinedMeshLibraryImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\ObjectsAsMeshLibImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\PackedSceneImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\SeperateMeshImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\SeperateMeshLibraryImporter.cs.uid" />
+  </ItemGroup>
+</Project>
