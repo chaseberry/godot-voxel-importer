@@ -15,8 +15,8 @@ public partial class ObjectsAsMeshLibImporter : EditorImportPlugin {
     public override float _GetPriority() => 1;
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
-    public override string _GetImporterName() => "voxel.objects.as.meshlib";
-    public override string _GetVisibleName() => "Voxel Objects to MeshLib";
+    public override string _GetImporterName() => "voxel.separate.meshLib";
+    public override string _GetVisibleName() => "Objects as Mesh Library";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "MeshLibrary";
     public override string _GetSaveExtension() => "meshlib";

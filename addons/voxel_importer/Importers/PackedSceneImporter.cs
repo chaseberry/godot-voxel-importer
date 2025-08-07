@@ -17,8 +17,8 @@ public partial class PackedSceneImporter : EditorImportPlugin {
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
-    public override string _GetImporterName() => "voxel.object.all.import.scene";
-    public override string _GetVisibleName() => "Voxel Scene";
+    public override string _GetImporterName() => "voxel.scene";
+    public override string _GetVisibleName() => "Packed Scene";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "PackedScene";
     public override string _GetSaveExtension() => "scn";

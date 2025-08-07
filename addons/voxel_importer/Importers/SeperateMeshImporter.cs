@@ -16,8 +16,8 @@ public partial class SeperateMeshImporter : EditorImportPlugin {
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
-    public override string _GetImporterName() => "voxel.object.all.import";
-    public override string _GetVisibleName() => "Voxel Object Object Library";
+    public override string _GetImporterName() => "voxel.separate.meshes";
+    public override string _GetVisibleName() => "Objects as Meshes";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "Mesh";
     public override string _GetSaveExtension() => "mesh";

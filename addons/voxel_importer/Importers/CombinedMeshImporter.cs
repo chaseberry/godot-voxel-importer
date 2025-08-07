@@ -16,8 +16,8 @@ public partial class CombinedMeshImporter : EditorImportPlugin {
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
-    public override string _GetImporterName() => "voxel.object.import";
-    public override string _GetVisibleName() => "Voxel Object";
+    public override string _GetImporterName() => "voxel.combined.mesh";
+    public override string _GetVisibleName() => "Object as Mesh";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "Mesh";
     public override string _GetSaveExtension() => "mesh";

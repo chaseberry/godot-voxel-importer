@@ -16,8 +16,8 @@ public partial class CombinedMeshLibraryImporter : EditorImportPlugin {
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
-    public override string _GetImporterName() => "voxel.object.frames.import";
-    public override string _GetVisibleName() => "Voxel Object Mesh Library";
+    public override string _GetImporterName() => "voxel.combined.meshLib";
+    public override string _GetVisibleName() => "Object as MeshLibrary";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "MeshLibrary";
     public override string _GetSaveExtension() => "meshlib";
