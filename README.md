@@ -9,12 +9,18 @@ Import Types
 ------------
 
 ### Object as Mesh
+Imports the object as a single Mesh. If the model contains more than one object, they are merged together.
 
 ### Object as Mesh Library
+Imports the object as a Mesh Library, with each frame being a Mesh3 in the library. Each object is merged together at
+their closest frame index. For example, if a model has two objects, one with frames 1, 3 and the other with frames 2, 3,
+the final library will have 3 frames [1, 2], [1, 2], [3, 3].
 
 ### Objects as Mesh Library
+Imports each separate object as a Mesh in a MeshLibrary
 
 ### Objects as Meshes
+
 
 ### Objects as Mesh Libraries
 
@@ -24,7 +30,7 @@ Import Options
 --------------
 
 ### Scale
-What scale of each voxel during the import process. A scale of one means each voxel is 1x1x1 in Godot World Space.
+The scale of each voxel during the import process. A scale of `1` means each voxel is `1x1x1` in Godot World Space.
 
 ### Include Invisible
 When checked, objects layers that are marked invisible will be included in the output model.
@@ -55,6 +61,7 @@ When using the 'Objects as Meshes' or 'Objects as Mesh Libraries' this is the he
 
 ### Packed Scene Logic
 How to handle the creation of a packed scene.
-1. Smart Objects - 
-2. First Key Frame - 
-3. Merge Key Frames - 
+1. Smart Objects - If the object only has 1 Frame, create a Mesh Instance, if the object has multiple frames, use an
+   AnimatableMesh.
+2. First Key Frame - Use the first frame of each object for the output model
+3. Merge Key Frames - Combing all frames of each object for the output model
