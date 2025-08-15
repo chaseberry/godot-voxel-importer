@@ -12,7 +12,7 @@ Import Types
 Imports the object as a single Mesh. If the model contains more than one object, they are merged together.
 
 ### Object as Mesh Library
-Imports the object as a Mesh Library, with each frame being a Mesh3 in the library. Each object is merged together at
+Imports the object as a Mesh Library, with each frame being a Mesh in the library. Each object is merged together at
 their closest frame index. For example, if a model has two objects, one with frames 1, 3 and the other with frames 2, 3,
 the final library will have 3 frames [1, 2], [1, 2], [3, 3].
 
@@ -20,11 +20,16 @@ the final library will have 3 frames [1, 2], [1, 2], [3, 3].
 Imports each separate object as a Mesh in a MeshLibrary
 
 ### Objects as Meshes
-
+Imports each object as a Mesh. The first object becomes the imported Mesh, the remaining objects are imported as Mesh
+files in the local folder, unless overriden.
 
 ### Objects as Mesh Libraries
+Imports each object as a Mesh Library, with each frame being a Mesh in the library. The first object becomes the imported Mesh Library, 
+the remaining objects are imported as Mesh Library files in the local folder, unless overriden.
 
 ### Packed Scene
+Imports the entire Voxel file as a packed scene. Each object is imported, respecting transforms & rotations from the 
+imported file, as either meshes, or mesh libraries, depending on settings. 
 
 Import Options
 --------------
