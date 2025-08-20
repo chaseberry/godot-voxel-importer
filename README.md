@@ -70,3 +70,5 @@ How to handle the creation of a packed scene.
    AnimatableMesh.
 2. First Key Frame - Use the first frame of each object for the output model
 3. Merge Key Frames - Combing all frames of each object for the output model
+
+### Generate Collision Type

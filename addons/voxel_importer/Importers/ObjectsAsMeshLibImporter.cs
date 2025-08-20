@@ -22,7 +22,8 @@ public partial class ObjectsAsMeshLibImporter : EditorImportPlugin {
     public override string _GetSaveExtension() => "meshlib";
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build(
-        ImportOptions.MergeAllFrames()
+        ImportOptions.MergeAllFrames(),
+        ImportOptions.GenerateCollisionType()
     );
 
     // Imports each object in the voxel file into a mesh apart of a mesh library. Each frame of the object is combined 

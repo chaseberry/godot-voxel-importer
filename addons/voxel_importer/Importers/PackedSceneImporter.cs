@@ -48,7 +48,7 @@ public partial class PackedSceneImporter : EditorImportPlugin {
             GD.PushError(e.Message);
             return Error.InvalidData;
         }
-        
+
         var fileName = sourceFile.GetFile().Replace(".vox", "");
         var scene = VoxelImporter.SingleScene(
             sceneName: fileName,
@@ -58,7 +58,8 @@ public partial class PackedSceneImporter : EditorImportPlugin {
             includeHidden: options.IncludeHidden(),
             groundOrigin: options.GroundOrigin(),
             ignoreTransforms: options.IgnoreTransforms(),
-            applyMaterials: options.ApplyMaterials()
+            applyMaterials: options.ApplyMaterials(),
+            collisionGenerationType: options.CollisionGenerationType()
         );
 
         return ResourceSaver.Save(scene, outputPath);

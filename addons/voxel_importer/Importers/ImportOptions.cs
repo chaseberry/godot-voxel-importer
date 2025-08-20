@@ -2,7 +2,7 @@
 using Godot;
 using Godot.Collections;
 
-namespace VoxelImporter.addons.voxel_importer.Constants;
+namespace VoxelImporter.addons.voxel_importer.Importers;
 
 public static class ImportOptions {
 
@@ -15,6 +15,7 @@ public static class ImportOptions {
     public const string BuildOutputPathSetting = "voxImporter/defaults/buildOutputPath";
     public const string BuildOutputHeaderSetting = "voxImporter/defaults/buildOutputHeader";
     public const string PackedSceneTypeSetting = "voxImporter/defaults/packedSceneType";
+    public const string CollisionGenerationTypeSetting = "voxImporter/defaults/collisionGenerationType";
 
     public static Array<Dictionary> Build(params Dictionary[] opts) {
         var r = Defaults();
@@ -80,6 +81,14 @@ public static class ImportOptions {
         ["description"] = "How to handle making packed scenes",
         ["property_hint"] = (int)PropertyHint.Enum,
         ["hint_string"] = "Smart Objects, First Key Frame, Merge Key Frames"
+    };
+
+    public static Dictionary GenerateCollisionType() => new() {
+        ["name"] = "Generate Collision Type",
+        ["default_value"] = GetDefault(CollisionGenerationTypeSetting, "None"),
+        ["description"] = "Generate collision type",
+        ["property_hint"] = (int)PropertyHint.Enum,
+        ["hint_string"] = "None, Box, Concave Polygon, Simple Convex Polygon, Complex Convex Polygon",
     };
 
     public static float GetScale(this Dictionary options) {
@@ -151,6 +160,20 @@ public static class ImportOptions {
             "First Key Frame" => new KeyFrameSelector.FirstKeyFrame(),
             "Merge Key Frames" => new KeyFrameSelector.CombinedKeyFrame(),
             _ => null
+        };
+    }
+
+    public static CollisionGenerationType CollisionGenerationType(this Dictionary options) {
+        if (!options.TryGetValue("Generate Collision Type", out var generationType)) {
+            generationType = "None";
+        }
+
+        return generationType.AsString() switch {
+            "Box" => Importers.CollisionGenerationType.Box,
+            "Concave Polygon" => Importers.CollisionGenerationType.ConcavePolygon,
+            "Simple Convex Polygon" => Importers.CollisionGenerationType.SimpleConvexPolygon,
+            "Complex Convex Polygon" => Importers.CollisionGenerationType.ComplexConvexPolygon,
+            _ => Importers.CollisionGenerationType.None
         };
     }
 

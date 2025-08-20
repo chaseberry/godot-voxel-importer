@@ -24,7 +24,6 @@
     <Content Include="addons\voxel_importer\Chunks\VoxXyziChunk.cs.uid" />
     <Content Include="addons\voxel_importer\Constants\FaceOrientation.cs.uid" />
     <Content Include="addons\voxel_importer\Constants\Faces.cs.uid" />
-    <Content Include="addons\voxel_importer\Constants\ImportOptions.cs.uid" />
     <Content Include="addons\voxel_importer\Data\VoxelColor.cs.uid" />
     <Content Include="addons\voxel_importer\Data\VoxelData.cs.uid" />
     <Content Include="addons\voxel_importer\Data\VoxelGroupNode.cs.uid" />
@@ -47,6 +46,7 @@
     <Content Include="addons\voxel_importer\Functions\VoxelImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\CombinedMeshImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\CombinedMeshLibraryImporter.cs.uid" />
+    <Content Include="addons\voxel_importer\Importers\ImportOptions.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\ObjectsAsMeshLibImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\PackedSceneImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\SeperateMeshImporter.cs.uid" />

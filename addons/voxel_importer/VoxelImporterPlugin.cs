@@ -2,7 +2,7 @@
 using Godot;
 using Godot.Collections;
 using VoxelImporter.addons.voxel_importer.Importers;
-using static VoxelImporter.addons.voxel_importer.Constants.ImportOptions;
+using static VoxelImporter.addons.voxel_importer.Importers.ImportOptions;
 
 namespace VoxelImporter.addons.voxel_importer;
 
@@ -18,7 +18,7 @@ public partial class VoxelImporterPlugin : EditorPlugin {
 
     public override void _EnterTree() {
         ConfigureDefaultSettings();
-        
+
         _cmi = new();
         _cmli = new();
         _smi = new();
@@ -66,6 +66,13 @@ public partial class VoxelImporterPlugin : EditorPlugin {
             (long)PropertyHint.Enum,
             "Smart Objects, First Key Frame, Merge Key Frames"
         );
+        CheckAndSet(
+            CollisionGenerationTypeSetting,
+            "None",
+            (long)Variant.Type.Int,
+            (long)PropertyHint.Enum,
+            "None, Box, Concave Polygon, Simple Convex Polygon, Complex Convex Polygon"
+        );
 
 
         ProjectSettings.Save();
@@ -91,7 +98,7 @@ public partial class VoxelImporterPlugin : EditorPlugin {
 
         return d;
     }
-    
+
 }
 
 #endif

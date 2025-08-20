@@ -22,7 +22,9 @@ public partial class CombinedMeshLibraryImporter : EditorImportPlugin {
     public override string _GetResourceType() => "MeshLibrary";
     public override string _GetSaveExtension() => "meshlib";
 
-    public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build();
+    public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build(
+            ImportOptions.GenerateCollisionType()
+        );
 
     // Creates a mesh library, where each item is a unique 'frame' from the voxel file, and each frame is a combination
     // of all objects at that frame.
