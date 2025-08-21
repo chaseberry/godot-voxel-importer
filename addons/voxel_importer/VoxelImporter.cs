@@ -382,6 +382,8 @@ public static class VoxelImporter {
                     meshNode.AddChild(staticBody);
                 }
 
+                // TODO is staticBody a child of the meshNode? the gdNode?
+                // Is the mesh a child of the static body?
                 gdNode.AddChild(meshNode);
 
                 break;
