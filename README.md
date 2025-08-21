@@ -72,3 +72,9 @@ How to handle the creation of a packed scene.
 3. Merge Key Frames - Combing all frames of each object for the output model
 
 ### Generate Collision Type
+How to generate collision for generated meshes when used in MeshLibraries or PackedScene.
+1. None - Don't generate any collisions
+2. Box - Generates a box collision using the generated meshes AABB
+3. Concave Polygon - Generates a Concave Polygon Shape
+4. Simple Convex Polygon - Generates a simple Convex Polygon Shape
+5. Complex Convex Polygon - Generates complex Convex Polygon Shape

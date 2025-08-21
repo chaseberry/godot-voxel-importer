@@ -25,7 +25,8 @@ public partial class SeperateMeshLibraryImporter : EditorImportPlugin {
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build(
         ImportOptions.BuildOutputOption(path),
-        ImportOptions.BuildOutputHeader(path)
+        ImportOptions.BuildOutputHeader(path),
+        ImportOptions.GenerateCollisionType()
     );
 
     private string Secondary(string path, string name, string ext) => $"{path}_{name}.{ext}";
@@ -68,7 +69,8 @@ public partial class SeperateMeshLibraryImporter : EditorImportPlugin {
                 meshData,
                 options.GetScale(),
                 options.GroundOrigin(),
-                options.ApplyMaterials()
+                options.ApplyMaterials(),
+                options.CollisionGenerationType()
             );
 
             ResourceSaver.Save(mesh, Secondary(root, name ?? z.ToString(), _GetSaveExtension()));
@@ -79,7 +81,8 @@ public partial class SeperateMeshLibraryImporter : EditorImportPlugin {
                 objs[0].Item2,
                 options.GetScale(),
                 options.GroundOrigin(),
-                options.ApplyMaterials()
+                options.ApplyMaterials(),
+                options.CollisionGenerationType()
             ),
             outputPath
         );
