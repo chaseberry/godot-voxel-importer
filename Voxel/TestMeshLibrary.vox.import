@@ -1,14 +1,14 @@
 [remap]
 
-importer="voxel.combined.meshLib"
-type="MeshLibrary"
+importer="voxel.scene"
+type="PackedScene"
 uid="uid://di576bst848dr"
-path="res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"
+path="res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.scn"
 
 [deps]
 
 source_file="res://Voxel/TestMeshLibrary.vox"
-dest_files=["res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"]
+dest_files=["res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.scn"]
 
 [params]
 
@@ -17,4 +17,5 @@ Include Invisible=false
 Set Origin At Bottom=false
 Ignore Transforms=true
 Apply Materials=false
-Generate Collision Type="Concave Polygon"
+Packed Scene Logic="Smart Objects"
+Generate Collision Type="Box"

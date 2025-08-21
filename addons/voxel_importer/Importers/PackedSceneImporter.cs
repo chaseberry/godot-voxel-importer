@@ -24,7 +24,8 @@ public partial class PackedSceneImporter : EditorImportPlugin {
     public override string _GetSaveExtension() => "scn";
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build(
-        ImportOptions.BuildPackedSceneType()
+        ImportOptions.BuildPackedSceneType(),
+        ImportOptions.GenerateCollisionType()
     );
 
     // Imports the mesh as a packed scene. Unique objects are imported as meshes or mesh libraries if they have

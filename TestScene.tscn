@@ -1,12 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bp1jxow527lcn"]
+[gd_scene format=3 uid="uid://bp1jxow527lcn"]
 
-[ext_resource type="MeshLibrary" uid="uid://di576bst848dr" path="res://Voxel/TestMeshLibrary.vox" id="1_mncer"]
-
-[node name="Node3D" type="GridMap"]
-mesh_library = ExtResource("1_mncer")
-data = {
-"cells": PackedInt32Array(65533, 6, 0, 65525, 6, 0, 65533, 14, 0, 65525, 14, 0)
-}
+[node name="Node3D" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.664592, 0.747207, 0, -0.747207, 0.664592, 5.56453, 32.2896, 48.1884)
+current = true
