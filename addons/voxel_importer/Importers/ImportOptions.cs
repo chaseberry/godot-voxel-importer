@@ -80,7 +80,7 @@ public static class ImportOptions {
         ["default_value"] = GetDefault(PackedSceneTypeSetting, "Smart Objects"),
         ["description"] = "How to handle making packed scenes",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = "Smart Objects, First Key Frame, Merge Key Frames"
+        ["hint_string"] = "Smart Objects,First Key Frame,Merge Key Frames"
     };
 
     public static Dictionary GenerateCollisionType() => new() {
@@ -88,7 +88,7 @@ public static class ImportOptions {
         ["default_value"] = GetDefault(CollisionGenerationTypeSetting, "None"),
         ["description"] = "Generate collision type",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = "None, Box, Concave Polygon, Simple Convex Polygon, Complex Convex Polygon",
+        ["hint_string"] = "None,Box,Concave Polygon,Simple Convex Polygon,Complex Convex Polygon",
     };
 
     public static float GetScale(this Dictionary options) {

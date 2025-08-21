@@ -11,9 +11,26 @@ config_version=5
 [application]
 
 config/name="VoxelImporter"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
 project/assembly_name="VoxelImporter"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/voxel_importer/plugin.cfg")
+
+[voxImporter]
+
+defaults/scale=1.0
+defaults/includeInvisible=false
+defaults/originAtBottom=false
+defaults/ignoreTransforms=true
+defaults/applyMaterials=false
+defaults/mergeAllFrames=false
+defaults/buildOutputPath=""
+defaults/buildOutputHeader=""
+defaults/packedSceneType="Smart Objects"
+defaults/collisionGenerationType="None"

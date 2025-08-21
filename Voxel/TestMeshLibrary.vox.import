@@ -1,0 +1,20 @@
+[remap]
+
+importer="voxel.combined.meshLib"
+type="MeshLibrary"
+uid="uid://di576bst848dr"
+path="res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"
+
+[deps]
+
+source_file="res://Voxel/TestMeshLibrary.vox"
+dest_files=["res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"]
+
+[params]
+
+Scale=1.0
+Include Invisible=false
+Set Origin At Bottom=false
+Ignore Transforms=true
+Apply Materials=false
+Generate Collision Type="Concave Polygon"

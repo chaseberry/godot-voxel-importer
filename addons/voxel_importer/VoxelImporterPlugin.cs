@@ -64,14 +64,14 @@ public partial class VoxelImporterPlugin : EditorPlugin {
             "Smart Objects",
             (long)Variant.Type.Int,
             (long)PropertyHint.Enum,
-            "Smart Objects, First Key Frame, Merge Key Frames"
+            "Smart Objects,First Key Frame,Merge Key Frames"
         );
         CheckAndSet(
             CollisionGenerationTypeSetting,
             "None",
             (long)Variant.Type.Int,
             (long)PropertyHint.Enum,
-            "None, Box, Concave Polygon, Simple Convex Polygon, Complex Convex Polygon"
+            "None,Box,Concave Polygon,Simple Convex Polygon,Complex Convex Polygon"
         );
 
 
