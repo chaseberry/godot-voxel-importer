@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".gitattributes" />
     <Content Include="addons\voxel_importer\Chunks\VoxChunk.cs.uid" />
     <Content Include="addons\voxel_importer\Chunks\VoxChunkType.cs.uid" />
     <Content Include="addons\voxel_importer\Chunks\VoxelData.cs.uid" />
