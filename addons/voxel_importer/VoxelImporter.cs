@@ -89,7 +89,7 @@ public static class VoxelImporter {
 
             var collisionShape = ShapeForMesh(meshInstance, collisionGenerationType);
             if (collisionShape != null) {
-                lib.SetItemShapes(id, [collisionShape, ShapeOffset(meshInstance, groundOrigin)]);
+                lib.SetItemShapes(id, [collisionShape, Transform3D.Identity]);
 
                 // I bet if we have groundOrigin, the 2nd array element needs to be new Vector3(0, y/2, 0);
             }
