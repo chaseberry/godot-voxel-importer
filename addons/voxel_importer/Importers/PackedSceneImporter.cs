@@ -56,7 +56,7 @@ public partial class PackedSceneImporter : EditorImportPlugin {
             vox: vox,
             selector: options.PackedSceneType(),
             scale: options.GetScale(),
-            includeHidden: options.IncludeHidden(),
+            includeHidden: options.IncludeInvisible(),
             groundOrigin: options.GroundOrigin(),
             ignoreTransforms: options.IgnoreTransforms(),
             applyMaterials: options.ApplyMaterials(),

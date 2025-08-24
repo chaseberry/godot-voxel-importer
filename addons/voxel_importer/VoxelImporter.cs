@@ -45,20 +45,20 @@ public static class VoxelImporter {
 
         return type switch {
             0 => MeshGenerator.Greedy(
-                CombinedSingleObject(vox, keySelector, options.IncludeHidden(), options.IgnoreTransforms()),
+                CombinedSingleObject(vox, keySelector, options.IncludeInvisible(), options.IgnoreTransforms()),
                 options.GetScale(),
                 options.GroundOrigin(),
                 options.ApplyMaterials()
             ),
             1 => BuildMeshLibrary(
-                CombinedMeshLibrary(vox, options.IncludeHidden(), options.IgnoreTransforms()),
+                CombinedMeshLibrary(vox, options.IncludeInvisible(), options.IgnoreTransforms()),
                 options.GetScale(),
                 options.GroundOrigin(),
                 options.ApplyMaterials(),
                 options.CollisionGenerationType()
             ),
             2 => BuildMeshLibrary(
-                SeparateMeshes(vox, keySelector, options.IncludeHidden(), options.IgnoreTransforms()),
+                SeparateMeshes(vox, keySelector, options.IncludeInvisible(), options.IgnoreTransforms()),
                 options.GetScale(),
                 options.GroundOrigin(),
                 options.ApplyMaterials(),

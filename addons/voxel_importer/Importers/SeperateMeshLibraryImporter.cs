@@ -58,7 +58,7 @@ public partial class SeperateMeshLibraryImporter : EditorImportPlugin {
 
         var objs = VoxelImporter.SeparateMeshLibraries(
             vox,
-            options.IncludeHidden(),
+            options.IncludeInvisible(),
             options.IgnoreTransforms()
         );
 

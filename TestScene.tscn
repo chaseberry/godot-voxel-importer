@@ -1,9 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bp1jxow527lcn"]
-
-[ext_resource type="MeshLibrary" uid="uid://di576bst848dr" path="res://Voxel/TestMeshLibrary.vox" id="1_mncer"]
+[gd_scene format=3 uid="uid://bp1jxow527lcn"]
 
 [node name="Node3D" type="GridMap"]
-mesh_library = ExtResource("1_mncer")
 data = {
 "cells": PackedInt32Array(0, 2, 3, 8, 2, 3, 0, 12, 1, 10, 18, 0, 8, 10, 2)
 }

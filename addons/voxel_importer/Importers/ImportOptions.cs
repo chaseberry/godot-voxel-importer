@@ -1,4 +1,5 @@
-﻿using VoxelImporter.addons.voxel_importer.Functions;
+﻿using System;
+using VoxelImporter.addons.voxel_importer.Functions;
 using Godot;
 using Godot.Collections;
 
@@ -6,16 +7,24 @@ namespace VoxelImporter.addons.voxel_importer.Importers;
 
 public static class ImportOptions {
 
-    public const string ScaleSetting = "voxImporter/defaults/scale";
-    public const string IncludeInvisibleSetting = "voxImporter/defaults/includeInvisible";
-    public const string OriginAtBottomSetting = "voxImporter/defaults/originAtBottom";
-    public const string IgnoreTransformsSetting = "voxImporter/defaults/ignoreTransforms";
-    public const string ApplyMaterialsSetting = "voxImporter/defaults/applyMaterials";
-    public const string MergeAllFramesSetting = "voxImporter/defaults/mergeAllFrames";
-    public const string BuildOutputPathSetting = "voxImporter/defaults/buildOutputPath";
-    public const string BuildOutputHeaderSetting = "voxImporter/defaults/buildOutputHeader";
-    public const string PackedSceneTypeSetting = "voxImporter/defaults/packedSceneType";
-    public const string CollisionGenerationTypeSetting = "voxImporter/defaults/collisionGenerationType";
+    public const string ScaleOption = "common/scale";
+    public const string IncludeInvisibleOption = "common/include_invisible";
+    public const string SetOriginAtBottomOption = "common/set_origin_at_bottom";
+    public const string IgnoreTransformsOption = "common/ignore_transforms";
+    public const string ApplyMaterialsOption = "common/apply_materials";
+    public const string ExportRemainingObjectsOption = "remaining_objects/export";
+    public const string OutputDirectoryOption = "remaining_objects/output_directory";
+    public const string OutputHeaderOption = "remaining_objects/output_header";
+    public const string PackedSceneLogicOption = "packed_scene_logic";
+    public const string GenerateCollisionTypeOption = "generate_collision_type";
+
+    enum PackedSceneValues {
+
+        SmartObjects,
+        FirstKeyFrame,
+        MergeKeyFrames
+
+    }
 
     public static Array<Dictionary> Build(params Dictionary[] opts) {
         var r = Defaults();
@@ -25,79 +34,88 @@ public static class ImportOptions {
         return r;
     }
 
+    public static Dictionary Option(
+        string name,
+        Variant defaultValue,
+        string description,
+        Variant propertyHint = default,
+        Variant hintString = default
+    ) => new() {
+        ["name"] = name,
+        ["default_value"] = defaultValue,
+        ["description"] = description,
+        ["property_hint"] = propertyHint,
+        ["hint_string"] = hintString
+    };
+
     private static Array<Dictionary> Defaults() => [
-        new() {
-            ["name"] = "Scale",
-            ["default_value"] = GetDefault(ScaleSetting, 1.0),
-            ["description"] = "How to Scales the voxel model"
-        },
-        new() {
-            ["name"] = "Include Invisible",
-            ["default_value"] = GetDefault(IncludeInvisibleSetting, false),
-            ["description"] = "Include invisible models"
-        },
-        new() {
-            ["name"] = "Set Origin At Bottom",
-            ["default_value"] = GetDefault(OriginAtBottomSetting, false),
-            ["description"] = ""
-        },
-        new() {
-            ["name"] = "Ignore Transforms",
-            ["default_value"] = GetDefault(IgnoreTransformsSetting, true),
-            ["description"] = ""
-        },
-        new() {
-            ["name"] = "Apply Materials",
-            ["default_value"] = GetDefault(ApplyMaterialsSetting, false),
-            ["description"] = ""
-        }
+        Option(ScaleOption, 1.0f, "How to Scales the voxel model"),
+        Option(IncludeInvisibleOption, false, "Include invisible models"),
+        Option(SetOriginAtBottomOption, false, "Set origin at bottom"),
+        Option(IgnoreTransformsOption, true, "Ignore transforms"),
+        Option(ApplyMaterialsOption, false, "Apply materials"),
+    ];
+
+    public static Array<Dictionary> RemainingExports(string path) => [
+        Option(ExportRemainingObjectsOption, false, ""),
+        Option(OutputDirectoryOption, path.Replace(path.GetFile(), ""), ""),
+        Option(OutputHeaderOption, path.GetFile().Replace(".vox", ""), ""),
     ];
 
     public static Dictionary MergeAllFrames() => new() {
         ["name"] = "Merge All Frames",
-        ["default_value"] = GetDefault(MergeAllFramesSetting, false),
+        ["default_value"] = false,
         ["description"] = "Merge all key frames into one model"
     };
 
     public static Dictionary BuildOutputOption(string path) {
         return new() {
-            ["name"] = "Output Directory",
-            ["default_value"] = GetDefault(BuildOutputPathSetting, path.Replace(path.GetFile(), "")),
+            ["name"] = OutputDirectoryOption,
+            ["default_value"] = path.Replace(path.GetFile(), ""),
             ["description"] = "Output directory for generated meshes"
         };
     }
 
     public static Dictionary BuildOutputHeader(string path) {
         return new() {
-            ["name"] = "Output Header",
-            ["default_value"] = GetDefault(BuildOutputHeaderSetting, path.GetFile().Replace(".vox", "")),
+            ["name"] = OutputHeaderOption,
+            ["default_value"] = path.GetFile().Replace(".vox", ""),
             ["description"] = "Output file header name"
         };
     }
 
     public static Dictionary BuildPackedSceneType() => new() {
-        ["name"] = "Packed Scene Logic",
-        ["default_value"] = GetDefault(PackedSceneTypeSetting, "Smart Objects"),
+        ["name"] = PackedSceneLogicOption,
+        ["default_value"] = "Smart Objects",
         ["description"] = "How to handle making packed scenes",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = "Smart Objects,First Key Frame,Merge Key Frames"
+        ["hint_string"] = string.Join(",", Enum.GetValues(typeof(PackedSceneValues)))
     };
 
     public static Dictionary GenerateCollisionType() => new() {
-        ["name"] = "Generate Collision Type",
-        ["default_value"] = GetDefault(CollisionGenerationTypeSetting, "None"),
+        ["name"] = GenerateCollisionTypeOption,
+        ["default_value"] = "None",
         ["description"] = "Generate collision type",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = "None,Box,Concave Polygon,Simple Convex Polygon,Complex Convex Polygon",
+        ["hint_string"] = string.Join(",", Enum.GetValues(typeof(CollisionGenerationType)))
     };
 
-    public static float GetScale(this Dictionary options) {
-        if (!options.TryGetValue("Scale", out var scale)) {
-            scale = 1f;
+    public static float GetFloat(Dictionary options, string key, float defaultValue) {
+        if (!options.TryGetValue(key, out var scale)) {
+            scale = defaultValue;
         }
 
         return scale.AsSingle();
     }
+
+    public static bool GetBool(Dictionary options, string key, bool defaultValue) {
+        if (!options.TryGetValue(key, out var merge)) {
+            merge = defaultValue;
+        }
+
+        return merge.AsBool();
+    }
+
 
     public static bool MergeFrames(this Dictionary options) {
         if (!options.TryGetValue("Merge All Frames", out var merge)) {
@@ -107,44 +125,22 @@ public static class ImportOptions {
         return merge.AsBool();
     }
 
-    public static bool GroundOrigin(this Dictionary options) {
-        if (!options.TryGetValue("Set Origin At Bottom", out var ground)) {
-            ground = false;
-        }
+    public static float GetScale(this Dictionary options) => GetFloat(options, ScaleOption, 1.0f);
 
-        return ground.AsBool();
-    }
+    public static bool GroundOrigin(this Dictionary options) => GetBool(options, SetOriginAtBottomOption, false);
 
-    public static bool IncludeHidden(this Dictionary options) {
-        if (!options.TryGetValue("Include Invisible", out var includeHidden)) {
-            includeHidden = false;
-        }
+    public static bool IncludeInvisible(this Dictionary options) => GetBool(options, IncludeInvisibleOption, false);
 
-        return includeHidden.AsBool();
-    }
+    public static bool IgnoreTransforms(this Dictionary options) => GetBool(options, IgnoreTransformsOption, true);
 
-    public static bool IgnoreTransforms(this Dictionary options) {
-        if (!options.TryGetValue("Ignore Transforms", out var ignoreTransforms)) {
-            ignoreTransforms = true;
-        }
-
-        return ignoreTransforms.AsBool();
-    }
-
-    public static bool ApplyMaterials(this Dictionary options) {
-        if (!options.TryGetValue("Apply Materials", out var applyMaterials)) {
-            applyMaterials = false;
-        }
-
-        return applyMaterials.AsBool();
-    }
+    public static bool ApplyMaterials(this Dictionary options) => GetBool(options, ApplyMaterialsOption, false);
 
     public static string OutputPath(this Dictionary options, string sourcePath) {
-        if (!options.TryGetValue("Output Directory", out var dir)) {
+        if (!options.TryGetValue(OutputDirectoryOption, out var dir)) {
             dir = sourcePath.Replace(sourcePath.GetFile(), "");
         }
 
-        if (!options.TryGetValue("Output Header", out var name)) {
+        if (!options.TryGetValue(OutputHeaderOption, out var name)) {
             name = sourcePath.GetFile().Replace(".vox", "");
         }
 
@@ -152,7 +148,7 @@ public static class ImportOptions {
     }
 
     public static KeyFrameSelector? PackedSceneType(this Dictionary options) {
-        if (!options.TryGetValue("Packed Scene Logic", out var logic)) {
+        if (!options.TryGetValue(PackedSceneLogicOption, out var logic)) {
             logic = 2;
         }
 
@@ -164,7 +160,7 @@ public static class ImportOptions {
     }
 
     public static CollisionGenerationType CollisionGenerationType(this Dictionary options) {
-        if (!options.TryGetValue("Generate Collision Type", out var generationType)) {
+        if (!options.TryGetValue(GenerateCollisionTypeOption, out var generationType)) {
             generationType = "None";
         }
 
@@ -175,19 +171,6 @@ public static class ImportOptions {
             "Complex Convex Polygon" => Importers.CollisionGenerationType.ComplexConvexPolygon,
             _ => Importers.CollisionGenerationType.None
         };
-    }
-
-    public static Variant GetDefault(string key, Variant def) {
-        if (!ProjectSettings.HasSetting(key)) {
-            return def;
-        }
-
-        var v = ProjectSettings.GetSetting(key);
-        if (v.VariantType == Variant.Type.String && v.AsString().IsNullOrBlank()) {
-            return def;
-        }
-
-        return v;
     }
 
 }
