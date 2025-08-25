@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Linq;
 using VoxelImporter.addons.voxel_importer.Functions;
 using Godot;
 using Godot.Collections;
+using VoxelImporter.addons.voxel_importer.Data;
 
 namespace VoxelImporter.addons.voxel_importer.Importers;
 
 public static class ImportOptions {
 
+    public const string ObjectOption = "object";
+    public const string FrameOption = "frame";
     public const string ScaleOption = "common/scale";
     public const string IncludeInvisibleOption = "common/include_invisible";
     public const string SetOriginAtBottomOption = "common/set_origin_at_bottom";
@@ -17,6 +21,7 @@ public static class ImportOptions {
     public const string OutputHeaderOption = "remaining_objects/output_header";
     public const string PackedSceneLogicOption = "packed_scene_logic";
     public const string GenerateCollisionTypeOption = "generate_collision_type";
+    public const string MergeAll = "Merge All";
 
     enum PackedSceneValues {
 
@@ -99,6 +104,43 @@ public static class ImportOptions {
         ["property_hint"] = (int)PropertyHint.Enum,
         ["hint_string"] = string.Join(",", Enum.GetValues(typeof(CollisionGenerationType)))
     };
+
+    public static Dictionary? Object(VoxFile vox) {
+        var objects = vox.GatherObjects(true);
+        if (objects.Count <= 1) {
+            return null;
+        }
+
+        return Option(
+            name: ObjectOption,
+            description: "",
+            defaultValue: MergeAll,
+            propertyHint: (int)PropertyHint.Enum,
+            hintString: string.Join(
+                ",",
+                objects.Select((o, idx) => o.Chain.OfType<VoxelTransformNode>().Last().Name ?? $"Object {idx}")
+            ) + $",{MergeAll}"
+        );
+    }
+
+    public static Dictionary? Frames(VoxFile vox) {
+        var objects = vox.GatherObjects(true);
+        var frameIndexes = objects.SelectMany(o => o.VoxelObject.Frames.Keys).Distinct().ToList();
+        if (frameIndexes.Count <= 1) {
+            return null;
+        }
+
+        return Option(
+            name: FrameOption,
+            description: "",
+            defaultValue: MergeAll,
+            propertyHint: (int)PropertyHint.Enum,
+            hintString: string.Join(
+                ",",
+                frameIndexes.Select(o => $"Frame {o}")
+            ) + $",{MergeAll}"
+        );
+    }
 
     public static float GetFloat(Dictionary options, string key, float defaultValue) {
         if (!options.TryGetValue(key, out var scale)) {

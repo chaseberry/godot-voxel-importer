@@ -14,7 +14,6 @@ public partial class MeshImporter : EditorImportPlugin {
     public override string _GetPresetName(int presetIndex) => "Unknown";
     public override int _GetImportOrder() => 0;
     public override float _GetPriority() => 1;
-
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
