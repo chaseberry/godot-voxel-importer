@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Godot;
 using Godot.Collections;
 using VoxelImporter.addons.voxel_importer.Data;
+using VoxelImporter.addons.voxel_importer.Functions;
 
 namespace VoxelImporter.addons.voxel_importer.Importers;
 
 [Tool]
 public partial class MeshImporter : EditorImportPlugin {
+
+    private readonly Regex ObjectRegex = new("Object (\\d+)");
+    private readonly Regex FrameRegex = new("Frame (\\d+)");
 
     // Constants tm
     public override int _GetPresetCount() => 0;
@@ -49,19 +54,24 @@ public partial class MeshImporter : EditorImportPlugin {
         if (VoxelImporter.LoadFile(sourceFile, out var access) == Error.CantOpen) {
             return FileAccess.GetOpenError();
         }
-        
+
         var objectName = options.GetObject();
         var frameName = options.GetFrame();
 
-        if (objectName != ImportOptions.MergeAll) {
-            //Object (\d+)
-            
-        }
+        // TODO by index could fuck up with an invisible thing is selected >.>
+        ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
+            ? new ObjectSelector.MergeAll()
+            : (
+                ObjectRegex.IsMatch(objectName)
+                    ? new ObjectSelector.ByIndex(ObjectRegex.Match(objectName).Groups[1].Value.ToInt())
+                    : new ObjectSelector.ByName(objectName)
+            );
 
-        if (frameName != ImportOptions.MergeAll) {
-            // Frame (\d+)
-        }
-        
+        KeyFrameSelector keyFrame =
+            frameName == ImportOptions.MergeAll
+                ? new KeyFrameSelector.CombinedKeyFrame()
+                : new KeyFrameSelector.SpecificKeyFrames(FrameRegex.Match(frameName).Groups[1].Value.ToInt());
+
         Resource resource;
         try {
             resource = VoxelImporter.Import(0, access, options);

@@ -19,9 +19,9 @@ public abstract class KeyFrameSelector {
 
     }
 
-    public class SpecificKeyFrames(List<int> frames) : KeyFrameSelector {
+    public class SpecificKeyFrames(int frame) : KeyFrameSelector {
 
-        public override List<int> GetFrames(VoxFile file) => frames;
+        public override List<int> GetFrames(VoxFile file) => new(frame);
 
     }
 

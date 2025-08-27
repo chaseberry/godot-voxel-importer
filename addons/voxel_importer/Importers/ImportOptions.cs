@@ -199,7 +199,7 @@ public static class ImportOptions {
     }
 
     public static string GetObject(this Dictionary options) => GetString(options, ObjectOption, MergeAll);
-    
+
     public static string GetFrame(this Dictionary options) => GetString(options, FrameOption, MergeAll);
 
     public static float GetScale(this Dictionary options) => GetFloat(options, ScaleOption, 1.0f);
