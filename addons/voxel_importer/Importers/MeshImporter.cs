@@ -24,48 +24,14 @@ public partial class MeshImporter : EditorImportPlugin {
     public override string _GetSaveExtension() => "mesh";
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) {
-        var opts = ImportOptions.Build();
-        var vox = Get(path)!;
+        var vox = Get(path);
 
-        var objects = vox.GatherObjects(true);
-        if (objects.Count > 1) {
-            opts.Insert(
-                0,
-                ImportOptions.Option(
-                    name: "object",
-                    description: "",
-                    defaultValue: "Merge All",
-                    propertyHint: (int)PropertyHint.Enum,
-                    hintString: string.Join(
-                        ",",
-                        objects.Select(o => o.Chain.OfType<VoxelTransformNode>().Last().Name ?? "Object $index")
-                    ) + ",Merge All"
-                )
-            );
-        }
-
-        var frameIndexes = objects.SelectMany(o => o.VoxelObject.Frames.Keys).Distinct().ToList();
-        if (frameIndexes.Count > 1) {
-            opts.Insert(
-                1,
-                ImportOptions.Option(
-                    name: "Frame",
-                    description: "",
-                    defaultValue: "Merge All",
-                    propertyHint: (int)PropertyHint.Enum,
-                    hintString: string.Join(
-                        ",",
-                        frameIndexes.Select(o => $"Frame {o}")
-                    ) + ",Merge All"
-                )
-            );
-        }
-
-        if (objects.Count > 1) {
-            opts.AddRange(
-                ImportOptions.RemainingExports(path)
-            );
-        }
+        var opts = ImportOptions.Build(
+                ImportOptions.Object(vox),
+                ImportOptions.Frames(vox)
+            )
+            .Defaults()
+            .RemainingExports(vox, path);
 
         return opts;
     }

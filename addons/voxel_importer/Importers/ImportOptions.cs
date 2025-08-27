@@ -31,10 +31,10 @@ public static class ImportOptions {
 
     }
 
-    public static Array<Dictionary> Build(params Dictionary[] opts) {
-        var r = Defaults();
+    public static Array<Dictionary> Build(params Dictionary?[] opts) {
+        var r = new Array<Dictionary>();
 
-        opts.ForEach(o => r.Add(o));
+        opts.OfType<Dictionary>().ForEach(o => r.Add(o));
 
         return r;
     }
@@ -53,19 +53,34 @@ public static class ImportOptions {
         ["hint_string"] = hintString
     };
 
-    private static Array<Dictionary> Defaults() => [
-        Option(ScaleOption, 1.0f, "How to Scales the voxel model"),
-        Option(IncludeInvisibleOption, false, "Include invisible models"),
-        Option(SetOriginAtBottomOption, false, "Set origin at bottom"),
-        Option(IgnoreTransformsOption, true, "Ignore transforms"),
-        Option(ApplyMaterialsOption, false, "Apply materials"),
-    ];
+    public static Array<Dictionary> Defaults(this Array<Dictionary> opts) {
+        opts.AddRange(
+            [
+                Option(ScaleOption, 1.0f, "How to Scales the voxel model"),
+                Option(IncludeInvisibleOption, false, "Include invisible models"),
+                Option(SetOriginAtBottomOption, false, "Set origin at bottom"),
+                Option(IgnoreTransformsOption, true, "Ignore transforms"),
+                Option(ApplyMaterialsOption, false, "Apply materials"),
+            ]
+        );
 
-    public static Array<Dictionary> RemainingExports(string path) => [
-        Option(ExportRemainingObjectsOption, false, ""),
-        Option(OutputDirectoryOption, path.Replace(path.GetFile(), ""), ""),
-        Option(OutputHeaderOption, path.GetFile().Replace(".vox", ""), ""),
-    ];
+        return opts;
+    }
+
+    public static Array<Dictionary> RemainingExports(this Array<Dictionary> opts, VoxFile? vox, string path) {
+        if (vox == null || vox.GatherObjects(true).Count <= 1) {
+            return opts;
+        }
+
+        opts.AddRange(
+            [
+                Option(ExportRemainingObjectsOption, false, ""),
+                Option(OutputDirectoryOption, path.Replace(path.GetFile(), ""), ""),
+                Option(OutputHeaderOption, path.GetFile().Replace(".vox", ""), ""),
+            ]
+        );
+        return opts;
+    }
 
     public static Dictionary MergeAllFrames() => new() {
         ["name"] = "Merge All Frames",
@@ -105,7 +120,11 @@ public static class ImportOptions {
         ["hint_string"] = string.Join(",", Enum.GetValues(typeof(CollisionGenerationType)))
     };
 
-    public static Dictionary? Object(VoxFile vox) {
+    public static Dictionary? Object(VoxFile? vox) {
+        if (vox == null) {
+            return null;
+        }
+
         var objects = vox.GatherObjects(true);
         if (objects.Count <= 1) {
             return null;
@@ -123,7 +142,11 @@ public static class ImportOptions {
         );
     }
 
-    public static Dictionary? Frames(VoxFile vox) {
+    public static Dictionary? Frames(VoxFile? vox) {
+        if (vox == null) {
+            return null;
+        }
+
         var objects = vox.GatherObjects(true);
         var frameIndexes = objects.SelectMany(o => o.VoxelObject.Frames.Keys).Distinct().ToList();
         if (frameIndexes.Count <= 1) {
