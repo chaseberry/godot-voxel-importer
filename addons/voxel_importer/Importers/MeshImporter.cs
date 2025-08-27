@@ -50,6 +50,18 @@ public partial class MeshImporter : EditorImportPlugin {
             return FileAccess.GetOpenError();
         }
         
+        var objectName = options.GetObject();
+        var frameName = options.GetFrame();
+
+        if (objectName != ImportOptions.MergeAll) {
+            //Object (\d+)
+            
+        }
+
+        if (frameName != ImportOptions.MergeAll) {
+            // Frame (\d+)
+        }
+        
         Resource resource;
         try {
             resource = VoxelImporter.Import(0, access, options);
