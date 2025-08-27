@@ -49,7 +49,7 @@ public partial class MeshImporter : EditorImportPlugin {
         if (VoxelImporter.LoadFile(sourceFile, out var access) == Error.CantOpen) {
             return FileAccess.GetOpenError();
         }
-
+        
         Resource resource;
         try {
             resource = VoxelImporter.Import(0, access, options);
