@@ -137,7 +137,7 @@ public static class ImportOptions {
             propertyHint: (int)PropertyHint.Enum,
             hintString: string.Join(
                 ",",
-                objects.Select((o, idx) => o.Chain.OfType<VoxelTransformNode>().Last().Name ?? $"Object {idx}")
+                objects.Select(o => o.Name())
             ) + $",{MergeAll}"
         );
     }

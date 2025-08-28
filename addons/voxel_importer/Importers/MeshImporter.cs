@@ -11,8 +11,7 @@ namespace VoxelImporter.addons.voxel_importer.Importers;
 [Tool]
 public partial class MeshImporter : EditorImportPlugin {
 
-    private readonly Regex ObjectRegex = new("Object (\\d+)");
-    private readonly Regex FrameRegex = new("Frame (\\d+)");
+    private readonly Regex _frameRegex = new("Frame (\\d+)");
 
     // Constants tm
     public override int _GetPresetCount() => 0;
@@ -70,44 +69,53 @@ public partial class MeshImporter : EditorImportPlugin {
         // Unless it only applies when merge all is selected?
         ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
             ? new ObjectSelector.MergeAll()
-            : (
-                ObjectRegex.IsMatch(objectName)
-                    ? new ObjectSelector.ByIndex(ObjectRegex.Match(objectName).Groups[1].Value.ToInt())
-                    : new ObjectSelector.ByName(objectName)
-            );
+            : new ObjectSelector.ByName(objectName);
 
         KeyFrameSelector keyFrame =
             frameName == ImportOptions.MergeAll
                 ? new KeyFrameSelector.CombinedKeyFrame()
-                : new KeyFrameSelector.SpecificKeyFrames(FrameRegex.Match(frameName).Groups[1].Value.ToInt());
+                : new KeyFrameSelector.SpecificKeyFrames(_frameRegex.Match(frameName).Groups[1].Value.ToInt());
 
-        MeshGenerator.Greedy(
-            VoxelImporter.CombineObjects(
-                objectSelection.GetObjects(voxelObjects),
-                keyFrame.GetFrames(vox),
-                ignoreTransforms
-            ),
-            scale,
-            groundOrigin,
-            applyMaterials
-        );
-        
-        
+        var primary = objectSelection.GetObjects(voxelObjects);
         Resource resource;
         try {
-            
-            resource = VoxelImporter.Import(0, access, options);
+            resource = MeshGenerator.Greedy(
+                VoxelImporter.CombineObjects(
+                    primary,
+                    keyFrame.GetFrames(vox),
+                    ignoreTransforms
+                ),
+                scale,
+                groundOrigin,
+                applyMaterials
+            );
         } catch (Exception e) {
             GD.PushError(e.Message);
             return Error.InvalidData;
         }
-        
-        if (options.ExportRemaining() 
+
+        if (options.ExportRemaining()
             && objectSelection is not ObjectSelector.MergeAll
-            && vox.GatherObjects(includeInvisible).Count > 1) {
-            // do export
+            && voxelObjects.Count > 1) {
+            var root = options.OutputPath(sourceFile);
+            voxelObjects.RemoveAll(o => primary.Contains(o));
+            
+            foreach (var secondary in voxelObjects) {
+                var mesh = MeshGenerator.Greedy(
+                    VoxelImporter.CombineObjects(
+                        VoxUtils.ListOf(secondary),
+                        keyFrame.GetFrames(vox),
+                        ignoreTransforms
+                    ),
+                    scale,
+                    groundOrigin,
+                    applyMaterials
+                );
+                
+                ResourceSaver.Save(mesh, Secondary(root, secondary.Name(), _GetSaveExtension()));
+            }
         }
-        
+
         return ResourceSaver.Save(resource, outputPath);
     }
 
@@ -119,4 +127,5 @@ public partial class MeshImporter : EditorImportPlugin {
         return VoxelImporter.Parse(access);
     }
 
+    private string Secondary(string path, string name, string ext) => $"{path}_{name}.{ext}";
 }

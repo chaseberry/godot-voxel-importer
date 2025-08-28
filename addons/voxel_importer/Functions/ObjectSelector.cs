@@ -17,14 +17,7 @@ public abstract class ObjectSelector {
     public class ByName(string name) : ObjectSelector {
 
         public override List<SearchedVoxelObject> GetObjects(List<SearchedVoxelObject> objects) =>
-            objects.Where(o => o.Chain.OfType<VoxelTransformNode>().LastOrDefault()?.Name == name).ToList();
-
-    }
-
-    public class ByIndex(int index) : ObjectSelector {
-
-        public override List<SearchedVoxelObject> GetObjects(List<SearchedVoxelObject> objects) =>
-            VoxUtils.ListOf(objects[index]);
+            objects.Where(o => o.Name() == name).ToList();
 
     }
 
