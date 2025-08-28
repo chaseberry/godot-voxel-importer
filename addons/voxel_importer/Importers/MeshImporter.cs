@@ -55,10 +55,15 @@ public partial class MeshImporter : EditorImportPlugin {
             return FileAccess.GetOpenError();
         }
 
+        var vox = VoxelImporter.Parse(access);
+
         var objectName = options.GetObject();
         var frameName = options.GetFrame();
+        var includeInvisible = options.IncludeInvisible();
+        var voxelObjects = vox.GatherObjects(includeInvisible);
 
         // TODO by index could fuck up with an invisible thing is selected >.>
+        // Unless it only applies when merge all is selected?
         ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
             ? new ObjectSelector.MergeAll()
             : (
@@ -79,7 +84,13 @@ public partial class MeshImporter : EditorImportPlugin {
             GD.PushError(e.Message);
             return Error.InvalidData;
         }
-
+        
+        if (options.ExportRemaining() 
+            && objectSelection is not ObjectSelector.MergeAll
+            && vox.GatherObjects(includeInvisible).Count > 1) {
+            // do export
+        }
+        
         return ResourceSaver.Save(resource, outputPath);
     }
 

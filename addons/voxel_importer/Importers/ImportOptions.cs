@@ -212,6 +212,8 @@ public static class ImportOptions {
 
     public static bool ApplyMaterials(this Dictionary options) => GetBool(options, ApplyMaterialsOption, false);
 
+    public static bool ExportRemaining(this Dictionary options) => GetBool(options, ExportRemainingObjectsOption, false);
+    
     public static string OutputPath(this Dictionary options, string sourcePath) {
         if (!options.TryGetValue(OutputDirectoryOption, out var dir)) {
             dir = sourcePath.Replace(sourcePath.GetFile(), "");

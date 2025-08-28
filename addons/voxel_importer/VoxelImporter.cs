@@ -100,6 +100,23 @@ public static class VoxelImporter {
         return lib;
     }
 
+    public static VoxelModel CombineObjects(
+        List<SearchedVoxelObject> objects,
+        KeyFrameSelector keySelector,
+        bool ignoreTransforms
+    ) {
+        objects.Sort(SearchedVoxelObject.LayerSorter);
+        var combiner = new ModelCombiner();
+
+        objects.ForEach(obj =>
+            combiner.AddModel(
+                CombineObject(obj, keySelector.GetFrames(vox), ignoreTransforms)
+            )
+        );
+
+        return combiner.GetResult();
+    }
+
     private static VoxelModel CombinedSingleObject(
         VoxFile vox,
         KeyFrameSelector keySelector,
