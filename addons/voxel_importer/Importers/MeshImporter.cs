@@ -61,6 +61,10 @@ public partial class MeshImporter : EditorImportPlugin {
         var frameName = options.GetFrame();
         var includeInvisible = options.IncludeInvisible();
         var voxelObjects = vox.GatherObjects(includeInvisible);
+        var scale = options.GetScale();
+        var applyMaterials = options.ApplyMaterials();
+        var groundOrigin = options.GroundOrigin();
+        var ignoreTransforms = options.IgnoreTransforms();
 
         // TODO by index could fuck up with an invisible thing is selected >.>
         // Unless it only applies when merge all is selected?
@@ -77,8 +81,21 @@ public partial class MeshImporter : EditorImportPlugin {
                 ? new KeyFrameSelector.CombinedKeyFrame()
                 : new KeyFrameSelector.SpecificKeyFrames(FrameRegex.Match(frameName).Groups[1].Value.ToInt());
 
+        MeshGenerator.Greedy(
+            VoxelImporter.CombineObjects(
+                objectSelection.GetObjects(voxelObjects),
+                keyFrame.GetFrames(vox),
+                ignoreTransforms
+            ),
+            scale,
+            groundOrigin,
+            applyMaterials
+        );
+        
+        
         Resource resource;
         try {
+            
             resource = VoxelImporter.Import(0, access, options);
         } catch (Exception e) {
             GD.PushError(e.Message);

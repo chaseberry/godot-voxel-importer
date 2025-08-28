@@ -102,7 +102,7 @@ public static class VoxelImporter {
 
     public static VoxelModel CombineObjects(
         List<SearchedVoxelObject> objects,
-        KeyFrameSelector keySelector,
+        List<int> frames,
         bool ignoreTransforms
     ) {
         objects.Sort(SearchedVoxelObject.LayerSorter);
@@ -110,7 +110,7 @@ public static class VoxelImporter {
 
         objects.ForEach(obj =>
             combiner.AddModel(
-                CombineObject(obj, keySelector.GetFrames(vox), ignoreTransforms)
+                CombineObject(obj, frames, ignoreTransforms)
             )
         );
 
