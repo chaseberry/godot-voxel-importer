@@ -49,24 +49,21 @@ public partial class MeshImporter : EditorImportPlugin {
         Array<string> platformVariants,
         Array<string> genFiles
     ) {
-        var outputPath = $"{savePath}.{_GetSaveExtension()}";
         if (VoxelImporter.LoadFile(sourceFile, out var access) == Error.CantOpen) {
             return FileAccess.GetOpenError();
         }
 
         var vox = VoxelImporter.Parse(access);
-
+        var outputPath = $"{savePath}.{_GetSaveExtension()}";
         var objectName = options.GetObject();
         var frameName = options.GetFrame();
         var includeInvisible = options.IncludeInvisible();
-        var voxelObjects = vox.GatherObjects(includeInvisible);
         var scale = options.GetScale();
         var applyMaterials = options.ApplyMaterials();
         var groundOrigin = options.GroundOrigin();
         var ignoreTransforms = options.IgnoreTransforms();
-
-        // TODO by index could fuck up with an invisible thing is selected >.>
-        // Unless it only applies when merge all is selected?
+        var voxelObjects = vox.GatherObjects(includeInvisible);
+        
         ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
             ? new ObjectSelector.MergeAll()
             : new ObjectSelector.ByName(objectName);
