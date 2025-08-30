@@ -17,7 +17,7 @@ public partial class PackedSceneImporter : EditorImportPlugin {
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
-    public override string _GetImporterName() => "voxel.scene";
+    public override string _GetImporterName() => "voxel.import.scene";
     public override string _GetVisibleName() => "Packed Scene";
     public override string[] _GetRecognizedExtensions() => ["vox"];
     public override string _GetResourceType() => "PackedScene";
@@ -26,7 +26,7 @@ public partial class PackedSceneImporter : EditorImportPlugin {
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) => ImportOptions.Build(
         ImportOptions.BuildPackedSceneType(),
         ImportOptions.GenerateCollisionType()
-    );
+    ).Defaults();
 
     // Imports the mesh as a packed scene. Unique objects are imported as meshes or mesh libraries if they have
     // multiple frames. 
