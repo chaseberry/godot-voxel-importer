@@ -32,42 +32,6 @@ public static class VoxelImporter {
 
     public static VoxFile Parse(FileAccess access) => new VoxFileParser(access).Parse();
 
-    public static Resource Import(
-        int type,
-        FileAccess file,
-        Godot.Collections.Dictionary options
-    ) {
-        var vox = Parse(file);
-        GD.Print($"Importing {file.GetPath()} with {options}");
-
-        KeyFrameSelector keySelector =
-            options.MergeFrames() ? new KeyFrameSelector.CombinedKeyFrame() : new KeyFrameSelector.FirstKeyFrame();
-
-        return type switch {
-            0 => MeshGenerator.Greedy(
-                CombinedSingleObject(vox, keySelector, options.IncludeInvisible(), options.IgnoreTransforms()),
-                options.GetScale(),
-                options.GroundOrigin(),
-                options.ApplyMaterials()
-            ),
-            1 => BuildMeshLibrary(
-                CombinedMeshLibrary(vox, options.IncludeInvisible(), options.IgnoreTransforms()),
-                options.GetScale(),
-                options.GroundOrigin(),
-                options.ApplyMaterials(),
-                options.CollisionGenerationType()
-            ),
-            2 => BuildMeshLibrary(
-                SeparateMeshes(vox, keySelector, options.IncludeInvisible(), options.IgnoreTransforms()),
-                options.GetScale(),
-                options.GroundOrigin(),
-                options.ApplyMaterials(),
-                options.CollisionGenerationType()
-            ),
-            _ => throw new ArgumentException($"Invalid import type {type}")
-        };
-    }
-
     public static MeshLibrary BuildMeshLibrary(
         List<VoxelModel> models,
         float scale,
@@ -77,24 +41,24 @@ public static class VoxelImporter {
     ) {
         var lib = new MeshLibrary();
 
-        foreach (var mesh in models) {
+        foreach (var model in models) {
             var id = lib.GetLastUnusedItemId();
             lib.CreateItem(id);
 
-            var meshInstance = MeshGenerator.Greedy(mesh, scale, groundOrigin, applyMaterials);
+            var mesh = MeshGenerator.Greedy(model, scale, groundOrigin, applyMaterials);
 
-            if (mesh.Name != null) {
-                lib.SetItemName(id, mesh.Name);
+            if (model.Name != null) {
+                lib.SetItemName(id, model.Name);
             }
 
-            var collisionShape = ShapeForMesh(meshInstance, collisionGenerationType);
+            var collisionShape = ShapeForMesh(mesh, collisionGenerationType);
             if (collisionShape != null) {
                 lib.SetItemShapes(id, [collisionShape, Transform3D.Identity]);
 
                 // I bet if we have groundOrigin, the 2nd array element needs to be new Vector3(0, y/2, 0);
             }
 
-            lib.SetItemMesh(id, meshInstance);
+            lib.SetItemMesh(id, mesh);
         }
 
         return lib;
@@ -117,27 +81,6 @@ public static class VoxelImporter {
         return combiner.GetResult();
     }
 
-    private static VoxelModel CombinedSingleObject(
-        VoxFile vox,
-        KeyFrameSelector keySelector,
-        bool includeHidden,
-        bool ignoreTransforms
-    ) {
-        var frames = keySelector.GetFrames(vox);
-
-        var allObjects = vox.GatherObjects(includeHidden);
-        allObjects.Sort(SearchedVoxelObject.LayerSorter); // Sort by layers, so the last layers get added first
-        var combiner = new ModelCombiner();
-
-        allObjects.ForEach(obj =>
-            combiner.AddModel(
-                CombineObject(obj, frames, ignoreTransforms)
-            )
-        );
-
-        return combiner.GetResult();
-    }
-
     private static List<VoxelModel> CombinedMeshLibrary(
         VoxFile vox,
         bool includeHidden,
@@ -151,7 +94,8 @@ public static class VoxelImporter {
         List<SearchedVoxelObject> models,
         List<int> frames,
         bool ignoreTransforms
-    ) {
+        ) {
+        
         models.Sort(SearchedVoxelObject.LayerSorter);
 
         var results = new List<VoxelModel>();
@@ -217,35 +161,6 @@ public static class VoxelImporter {
                 var m = combiner.GetResult();
                 m.Name = name;
                 results.Add(m);
-            }
-        );
-
-        return results;
-    }
-
-    public static List<(string?, List<VoxelModel>)> SeparateMeshLibraries(
-        VoxFile vox,
-        bool includeHidden,
-        bool ignoreTransforms
-    ) {
-        var allObjects = vox.GatherObjects(includeHidden);
-        var results = new List<(string?, List<VoxelModel>)>();
-
-        allObjects.ForEach(obj => {
-                var frames = new List<VoxelModel>();
-                var name = obj.Chain.OfType<VoxelTransformNode>().Last().Name;
-                foreach (var frameIndex in obj.VoxelObject.Frames.Keys) {
-                    var model = obj.VoxelObject.GetModelAtFrame(frameIndex);
-                    var chain = obj.Chain.OfType<VoxelTransformNode>()
-                        .Select(t => t.GetFrameAtIndex(frameIndex))
-                        .OfType<VoxFrame>()
-                        .ToList();
-
-                    frames.Add(ModelFunctions.MoveToGlobalSpace(ModelFunctions.Center(model), ignoreTransforms, chain));
-                }
-
-
-                results.Add((name, frames));
             }
         );
 
@@ -471,10 +386,6 @@ public static class VoxelImporter {
             CollisionGenerationType.ComplexConvexPolygon => mesh.CreateConvexShape(),
             _ => null,
         };
-    }
-
-    private static Transform3D ShapeOffset(Mesh mesh, bool groundOrigin) {
-        return groundOrigin ? new(Basis.Identity, new() { Y = mesh.GetAabb().Size.Y / 2f }) : Transform3D.Identity;
     }
 
 }
