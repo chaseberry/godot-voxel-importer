@@ -24,14 +24,6 @@ public static class ImportOptions {
     public const string MeshLibraryTypeOption = "mesh_library_type";
     public const string MergeAll = "Merge All";
 
-    enum PackedSceneValues {
-
-        SmartObjects,
-        FirstKeyFrame,
-        MergeKeyFrames
-
-    }
-
     public static Array<Dictionary> Build(params Dictionary?[] opts) {
         var r = new Array<Dictionary>();
 
@@ -46,7 +38,8 @@ public static class ImportOptions {
         string description,
         Variant propertyHint = default,
         Variant hintString = default
-    ) => new() {
+    ) => new()
+    {
         ["name"] = name,
         ["default_value"] = defaultValue,
         ["description"] = description,
@@ -83,37 +76,17 @@ public static class ImportOptions {
         return opts;
     }
 
-    public static Dictionary MergeAllFrames() => new() {
-        ["name"] = "Merge All Frames",
-        ["default_value"] = false,
-        ["description"] = "Merge all key frames into one model"
-    };
-
-    public static Dictionary BuildOutputOption(string path) {
-        return new() {
-            ["name"] = OutputDirectoryOption,
-            ["default_value"] = path.Replace(path.GetFile(), ""),
-            ["description"] = "Output directory for generated meshes"
-        };
-    }
-
-    public static Dictionary BuildOutputHeader(string path) {
-        return new() {
-            ["name"] = OutputHeaderOption,
-            ["default_value"] = path.GetFile().Replace(".vox", ""),
-            ["description"] = "Output file header name"
-        };
-    }
-
-    public static Dictionary BuildPackedSceneType() => new() {
+    public static Dictionary BuildPackedSceneType() => new()
+    {
         ["name"] = PackedSceneLogicOption,
-        ["default_value"] = "Smart Objects",
+        ["default_value"] = nameof(PackedSceneValueType.SmartObjects),
         ["description"] = "How to handle making packed scenes",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = string.Join(",", Enum.GetValues<PackedSceneValues>())
+        ["hint_string"] = string.Join(",", Enum.GetValues<PackedSceneValueType>())
     };
 
-    public static Dictionary GenerateCollisionType() => new() {
+    public static Dictionary GenerateCollisionType() => new()
+    {
         ["name"] = GenerateCollisionTypeOption,
         ["default_value"] = "None",
         ["description"] = "Generate collision type",
@@ -205,14 +178,6 @@ public static class ImportOptions {
         return (T)Enum.Parse(typeof(T), GetString(options, key, defaultValue.ToString()), true);
     }
 
-    public static bool MergeFrames(this Dictionary options) {
-        if (!options.TryGetValue("Merge All Frames", out var merge)) {
-            merge = false;
-        }
-
-        return merge.AsBool();
-    }
-
     public static string GetObject(this Dictionary options) => GetString(options, ObjectOption, MergeAll);
 
     public static string GetFrame(this Dictionary options) => GetString(options, FrameOption, MergeAll);
@@ -243,13 +208,9 @@ public static class ImportOptions {
     }
 
     public static KeyFrameSelector? PackedSceneType(this Dictionary options) {
-        if (!options.TryGetValue(PackedSceneLogicOption, out var logic)) {
-            logic = 2;
-        }
-
-        return logic.AsString() switch {
-            "First Key Frame" => new KeyFrameSelector.FirstKeyFrame(),
-            "Merge Key Frames" => new KeyFrameSelector.CombinedKeyFrame(),
+        return GetEnum(options, PackedSceneLogicOption, PackedSceneValueType.SmartObjects) switch {
+            PackedSceneValueType.FirstKeyFrame => new KeyFrameSelector.FirstKeyFrame(),
+            PackedSceneValueType.MergeKeyFrames => new KeyFrameSelector.CombinedKeyFrame(),
             _ => null
         };
     }
@@ -261,4 +222,5 @@ public static class ImportOptions {
     public static MeshLibraryTypeEnum MeshLibraryType(this Dictionary options) {
         return GetEnum(options, MeshLibraryTypeOption, MeshLibraryTypeEnum.Animation);
     }
+
 }
