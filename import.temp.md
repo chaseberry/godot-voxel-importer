@@ -10,7 +10,7 @@ Import As MeshLibrary
 1. Import as Animation or Object Library
 2. Object: 1..N, merge all, every object; > 1 && animation
 3. Frame: 1..N merge all; if > 1 && object is not every object && objectLibrary
-4. Export Remaining Object; if > 1
+4. Export Remaining Object; if > 1, & animation
 5. Output Dir/Header if 3 == true
 
 Import As Scene

@@ -3,6 +3,6 @@
 public enum MeshLibraryTypeEnum {
 
     Animation,
-    ObjectLibrary
+    ObjectLibrary,
 
 }

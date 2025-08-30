@@ -168,8 +168,8 @@ public static class ImportOptions {
 
     public static Dictionary MeshLibraryType() => Option(
         MeshLibraryTypeOption,
-        "",
         nameof(MeshLibraryTypeEnum.Animation),
+        "",
         (int)PropertyHint.Enum,
         string.Join(
             ",",
@@ -255,17 +255,10 @@ public static class ImportOptions {
     }
 
     public static CollisionGenerationType CollisionGenerationType(this Dictionary options) {
-        if (!options.TryGetValue(GenerateCollisionTypeOption, out var generationType)) {
-            generationType = "None";
-        }
-
-        return generationType.AsString() switch {
-            "Box" => Importers.CollisionGenerationType.Box,
-            "Concave Polygon" => Importers.CollisionGenerationType.ConcavePolygon,
-            "Simple Convex Polygon" => Importers.CollisionGenerationType.SimpleConvexPolygon,
-            "Complex Convex Polygon" => Importers.CollisionGenerationType.ComplexConvexPolygon,
-            _ => Importers.CollisionGenerationType.None
-        };
+        return GetEnum(options, GenerateCollisionTypeOption, Importers.CollisionGenerationType.None);
     }
 
+    public static MeshLibraryTypeEnum MeshLibraryType(this Dictionary options) {
+        return GetEnum(options, MeshLibraryTypeOption, MeshLibraryTypeEnum.Animation);
+    }
 }

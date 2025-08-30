@@ -25,8 +25,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
 
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) {
-        var vox = Get(path);
-
+        var vox = VoxUtils.ParseFile(path);
         var opts = ImportOptions.Build(
                 ImportOptions.MeshLibraryType(),
                 ImportOptions.Object(vox),
@@ -38,9 +37,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
 
         return opts;
     }
-
-    // Imports all objects in the voxel file into a single mesh instance. 
-    // Either use the first 'frame' from each object, or merge all frames together
+    
     public override Error _Import(
         string sourceFile,
         string savePath,
@@ -54,41 +51,41 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
 
         var vox = VoxelImporter.Parse(access);
         var outputPath = $"{savePath}.{_GetSaveExtension()}";
+
+        Resource resource;
+        try {
+            resource = options.MeshLibraryType() == MeshLibraryTypeEnum.Animation
+                ? ImportAsAnimation(vox, options, sourceFile)
+                : ImportAsObjectLibrary(vox, options);
+        } catch (Exception e) {
+            GD.PushError(e.Message);
+            return Error.InvalidData;
+        }
+
+        return ResourceSaver.Save(resource, outputPath);
+    }
+
+    private Resource ImportAsAnimation(
+        VoxFile vox,
+        Dictionary options,
+        string sourceFile
+    ) {
         var objectName = options.GetObject();
-        var frameName = options.GetFrame();
-        var includeInvisible = options.IncludeInvisible();
-        var scale = options.GetScale();
-        var applyMaterials = options.ApplyMaterials();
-        var groundOrigin = options.GroundOrigin();
-        var ignoreTransforms = options.IgnoreTransforms();
-        var voxelObjects = vox.GatherObjects(includeInvisible);
 
         ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
             ? new ObjectSelector.MergeAll()
             : new ObjectSelector.ByName(objectName);
 
-        KeyFrameSelector keyFrame =
-            frameName == ImportOptions.MergeAll
-                ? new KeyFrameSelector.CombinedKeyFrame()
-                : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
-
+        var voxelObjects = vox.GatherObjects(options.IncludeInvisible());
         var primary = objectSelection.GetObjects(voxelObjects);
-        Resource resource;
-        try {
-            resource = MeshGenerator.Greedy(
-                VoxelImporter.CombineObjects(
-                    primary,
-                    keyFrame.GetFrames(vox),
-                    ignoreTransforms
-                ),
-                scale,
-                groundOrigin,
-                applyMaterials
-            );
-        } catch (Exception e) {
-            GD.PushError(e.Message);
-            return Error.InvalidData;
-        }
+
+        var meshLib = VoxelImporter.BuildMeshLibrary(
+            VoxelImporter.AnimationLibrary(primary, vox.GetFrameIndexes(), options.IgnoreTransforms()),
+            options.GetScale(),
+            options.GroundOrigin(),
+            options.ApplyMaterials(),
+            options.CollisionGenerationType()
+        );
 
         if (options.ExportRemaining()
             && objectSelection is not ObjectSelector.MergeAll
@@ -97,22 +94,41 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
             voxelObjects.RemoveAll(o => primary.Contains(o));
 
             foreach (var secondary in voxelObjects) {
-                var mesh = MeshGenerator.Greedy(
-                    VoxelImporter.CombineObjects(
+                var lib = VoxelImporter.BuildMeshLibrary(
+                    VoxelImporter.AnimationLibrary(
                         VoxUtils.ListOf(secondary),
-                        keyFrame.GetFrames(vox),
-                        ignoreTransforms
+                        vox.GetFrameIndexes(),
+                        options.IgnoreTransforms()
                     ),
-                    scale,
-                    groundOrigin,
-                    applyMaterials
+                    options.GetScale(),
+                    options.GroundOrigin(),
+                    options.ApplyMaterials(),
+                    options.CollisionGenerationType()
                 );
-
-                ResourceSaver.Save(mesh, VoxUtils.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
+                ResourceSaver.Save(lib, VoxUtils.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
             }
         }
 
-        return ResourceSaver.Save(resource, outputPath);
+        return meshLib;
+    }
+
+    private Resource ImportAsObjectLibrary(
+        VoxFile vox,
+        Dictionary options
+    ) {
+        var frameName = options.GetFrame();
+        KeyFrameSelector keyFrame =
+            frameName == ImportOptions.MergeAll
+                ? new KeyFrameSelector.CombinedKeyFrame()
+                : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
+
+        return VoxelImporter.BuildMeshLibrary(
+            VoxelImporter.SeparateMeshes(vox, keyFrame, options.IncludeInvisible(), options.IgnoreTransforms()),
+            options.GetScale(),
+            options.GroundOrigin(),
+            options.ApplyMaterials(),
+            options.CollisionGenerationType()
+        );
     }
 
     private VoxFile? Get(string path) {

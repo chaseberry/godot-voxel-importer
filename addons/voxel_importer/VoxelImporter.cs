@@ -144,15 +144,21 @@ public static class VoxelImporter {
         bool ignoreTransforms
     ) {
         var frames = vox.GetFrameIndexes();
+        return AnimationLibrary(vox.GatherObjects(includeHidden), frames, ignoreTransforms);
+    }
 
-        var allObjects = vox.GatherObjects(includeHidden);
-        allObjects.Sort(SearchedVoxelObject.LayerSorter);
+    public static List<VoxelModel> AnimationLibrary(
+        List<SearchedVoxelObject> models,
+        List<int> frames,
+        bool ignoreTransforms
+    ) {
+        models.Sort(SearchedVoxelObject.LayerSorter);
 
         var results = new List<VoxelModel>();
 
         foreach (var frameIndex in frames) {
             var combiner = new ModelCombiner();
-            allObjects.ForEach(o => {
+            models.ForEach(o => {
                     var model = o.GetModelAtFrame(frameIndex);
 
                     var chain = o.Chain.OfType<VoxelTransformNode>()
@@ -176,7 +182,7 @@ public static class VoxelImporter {
         return results;
     }
 
-    private static List<VoxelModel> SeparateMeshes(
+    public static List<VoxelModel> SeparateMeshes(
         VoxFile vox,
         KeyFrameSelector keySelector,
         bool includeHidden,
@@ -190,7 +196,7 @@ public static class VoxelImporter {
 
         allObjects.ForEach(obj => {
                 var combiner = new ModelCombiner();
-                var name = obj.Chain.OfType<VoxelTransformNode>().Last().Name;
+                var name = obj.Name();
                 foreach (var frameIndex in frames) {
                     var model = obj.VoxelObject.GetModelAtFrame(frameIndex);
 

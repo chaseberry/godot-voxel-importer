@@ -1,24 +1,25 @@
 [remap]
 
-importer="voxel.import.mesh"
-type="Mesh"
+importer="voxel.import.meshLibrary"
+type="MeshLibrary"
 uid="uid://di576bst848dr"
-path="res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.mesh"
+path="res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"
 
 [deps]
 
 source_file="res://Voxel/TestMeshLibrary.vox"
-dest_files=["res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.mesh"]
+dest_files=["res://.godot/imported/TestMeshLibrary.vox-bae49c59170ec80b181700cef54124b7.meshlib"]
 
 [params]
 
-Object="Merge All"
-Frame="Merge All"
-Scale=1.0
-Include Invisible=false
-Set Origin At Bottom=false
-Ignore Transforms=true
-Apply Materials=false
-Export Remaining Objects=false
-Output Header="TestMeshLibrary"
-Output Directory="res://Voxel/"
+mesh_library_type="ObjectLibrary"
+object="Dumbell"
+generate_collision_type="Box"
+common/scale=1.0
+common/include_invisible=false
+common/set_origin_at_bottom=false
+common/ignore_transforms=true
+common/apply_materials=false
+remaining_objects/export=false
+remaining_objects/output_directory="res://Voxel/"
+remaining_objects/output_header="TestMeshLibrary"

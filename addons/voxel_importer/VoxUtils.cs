@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Godot;
+using VoxelImporter.addons.voxel_importer.Data;
 
 namespace VoxelImporter.addons.voxel_importer;
 
@@ -59,5 +60,13 @@ public static class VoxUtils {
     public static readonly Regex FrameRegex = new("Frame (\\d+)");
 
     public static string SecondarySavePath(string path, string name, string ext) => $"{path}_{name}.{ext}";
+
+    public static VoxFile? ParseFile(string path) {
+        if (VoxelImporter.LoadFile(path, out var access) == Error.CantOpen) {
+            return null;
+        }
+
+        return VoxelImporter.Parse(access);
+    }
 
 }

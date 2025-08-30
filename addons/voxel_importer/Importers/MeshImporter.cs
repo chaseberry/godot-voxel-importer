@@ -26,7 +26,7 @@ public partial class MeshImporter : EditorImportPlugin {
     public override string _GetSaveExtension() => "mesh";
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) {
-        var vox = Get(path);
+        var vox = VoxUtils.ParseFile(path);
 
         var opts = ImportOptions.Build(
                 ImportOptions.Object(vox),
@@ -37,9 +37,7 @@ public partial class MeshImporter : EditorImportPlugin {
 
         return opts;
     }
-
-    // Imports all objects in the voxel file into a single mesh instance. 
-    // Either use the first 'frame' from each object, or merge all frames together
+    
     public override Error _Import(
         string sourceFile,
         string savePath,
@@ -113,14 +111,6 @@ public partial class MeshImporter : EditorImportPlugin {
         }
 
         return ResourceSaver.Save(resource, outputPath);
-    }
-
-    private VoxFile? Get(string path) {
-        if (VoxelImporter.LoadFile(path, out var access) == Error.CantOpen) {
-            return null;
-        }
-
-        return VoxelImporter.Parse(access);
     }
 
 }
