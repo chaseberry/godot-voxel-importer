@@ -26,7 +26,7 @@ public partial class MeshImporter : EditorImportPlugin {
     public override string _GetSaveExtension() => "mesh";
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) {
-        var vox = VoxUtils.ParseFile(path);
+        var vox = VoxelImporter.ParseFile(path);
 
         var opts = ImportOptions.Build(
                 ImportOptions.Object(vox),
@@ -68,7 +68,7 @@ public partial class MeshImporter : EditorImportPlugin {
         KeyFrameSelector keyFrame =
             frameName == ImportOptions.MergeAll
                 ? new KeyFrameSelector.CombinedKeyFrame()
-                : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
+                : new KeyFrameSelector.SpecificKeyFrames(VoxelImporter.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
 
         var primary = objectSelection.GetObjects(voxelObjects);
         Resource resource;
@@ -106,7 +106,7 @@ public partial class MeshImporter : EditorImportPlugin {
                     applyMaterials
                 );
                 
-                ResourceSaver.Save(mesh, VoxUtils.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
+                ResourceSaver.Save(mesh, VoxelImporter.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
             }
         }
 

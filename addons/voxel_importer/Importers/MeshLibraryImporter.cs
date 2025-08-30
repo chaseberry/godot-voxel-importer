@@ -11,21 +11,29 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
 
     // Constants tm
     public override int _GetPresetCount() => 0;
+
     public override string _GetPresetName(int presetIndex) => "Unknown";
+
     public override int _GetImportOrder() => 0;
+
     public override float _GetPriority() => 1;
+
     public override bool _GetOptionVisibility(string path, StringName optionName, Dictionary options) => true;
 
     // Per plugin unique
     public override string _GetImporterName() => "voxel.import.meshLibrary";
+
     public override string _GetVisibleName() => "TEST > MeshLibrary";
+
     public override string[] _GetRecognizedExtensions() => ["vox"];
+
     public override string _GetResourceType() => "MeshLibrary";
+
     public override string _GetSaveExtension() => "meshlib";
 
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex) {
-        var vox = VoxUtils.ParseFile(path);
+        var vox = VoxelImporter.ParseFile(path);
         var opts = ImportOptions.Build(
                 ImportOptions.MeshLibraryType(),
                 ImportOptions.Object(vox),
@@ -37,7 +45,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
 
         return opts;
     }
-    
+
     public override Error _Import(
         string sourceFile,
         string savePath,
@@ -57,7 +65,8 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
             resource = options.MeshLibraryType() == MeshLibraryTypeEnum.Animation
                 ? ImportAsAnimation(vox, options, sourceFile)
                 : ImportAsObjectLibrary(vox, options);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             GD.PushError(e.Message);
             return Error.InvalidData;
         }
@@ -105,7 +114,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
                     options.ApplyMaterials(),
                     options.CollisionGenerationType()
                 );
-                ResourceSaver.Save(lib, VoxUtils.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
+                ResourceSaver.Save(lib, VoxelImporter.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
             }
         }
 
@@ -120,7 +129,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
         KeyFrameSelector keyFrame =
             frameName == ImportOptions.MergeAll
                 ? new KeyFrameSelector.CombinedKeyFrame()
-                : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
+                : new KeyFrameSelector.SpecificKeyFrames(VoxelImporter.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
 
         return VoxelImporter.BuildMeshLibrary(
             VoxelImporter.SeparateObjects(vox, keyFrame, options.IncludeInvisible(), options.IgnoreTransforms()),

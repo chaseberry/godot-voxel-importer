@@ -21,6 +21,6 @@ public class VoxelObject(
         throw new ArgumentException("Bad voxel data for model {id}");
     }
 
-    public override List<VoxelNode> GetChildren() => VoxUtils.EmptyList<VoxelNode>();
+    public override List<VoxelNode> GetChildren() => [];
 
 }

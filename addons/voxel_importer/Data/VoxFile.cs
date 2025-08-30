@@ -18,7 +18,7 @@ public class VoxFile(int version) {
         if (Node == null) {
             return Models.Select(m => new SearchedVoxelObject {
                 VoxelObject = new(0, new() { [0] = m }),
-                Chain = VoxUtils.EmptyList<VoxelNode>()
+                Chain = []
             }).ToList();
         }
 
@@ -36,7 +36,7 @@ public class VoxFile(int version) {
         return node switch {
             VoxelTransformNode t => includeHidden || !t.IsHidden()
                 ? SearchObjects(t.Child, includeHidden, chain.Append(t).ToImmutableList())
-                : VoxUtils.EmptyList<SearchedVoxelObject>(),
+                : [],
             VoxelGroupNode group => group.Children.SelectMany(c =>
                 SearchObjects(c, includeHidden, chain.Append(group).ToImmutableList())
             ).ToList(),
@@ -45,7 +45,7 @@ public class VoxFile(int version) {
                     VoxelObject = vo,
                     Chain = chain.ToList()
                 }),
-            _ => VoxUtils.EmptyList<SearchedVoxelObject>()
+            _ => []
         };
     }
 

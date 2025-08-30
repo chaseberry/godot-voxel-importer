@@ -21,7 +21,7 @@ public class ModelCombiner {
 
     // TODO investigate this and see if this is correct behavior
     // See A, B
-    private VoxelModel result = new(0, 0, 0, VoxUtils.EmptyList<VoxelInstance>());
+    private VoxelModel result = new(0, 0, 0, []);
 
     // B: Assumed global space
     public void AddModel(VoxelModel model) { result = Combine(result, model); }

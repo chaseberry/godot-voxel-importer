@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using VoxelImporter.addons.voxel_importer.Chunks;
-using VoxelImporter.addons.voxel_importer.Constants;
 using VoxelImporter.addons.voxel_importer.Data;
 using VoxelImporter.addons.voxel_importer.Functions;
 using Godot;
@@ -15,19 +15,21 @@ public static class VoxelImporter {
     // TODO
     // 2. Verify layer ordering
 
-    // Modes
-    // 0: combined single object - first key frame or combined or [list of key frames]?
-    // 1: combined mesh library - 1 instance per frame index, with all meshes @ that frame combined
-    // 2: separate objects - first key frame or combined or [list of key frames]?
-    // 3: separate mesh libraries - 1 mesh lib per object per frame index
-    // 4: Scene with seperate meshs
-
-    // combines - requires objects to merge in a global space
-    // separate - each object can be local
-
     public static Error LoadFile(string path, out FileAccess access) {
         access = FileAccess.Open(path, FileAccess.ModeFlags.Read);
         return access == null ? Error.CantOpen : Error.Ok;
+    }
+    
+    public static readonly Regex FrameRegex = new("Frame (\\d+)");
+
+    public static string SecondarySavePath(string path, string name, string ext) => $"{path}_{name}.{ext}";
+
+    public static VoxFile? ParseFile(string path) {
+        if (VoxelImporter.LoadFile(path, out var access) == Error.CantOpen) {
+            return null;
+        }
+
+        return VoxelImporter.Parse(access);
     }
 
     public static VoxFile Parse(FileAccess access) => new VoxFileParser(access).Parse();
@@ -279,7 +281,7 @@ public static class VoxelImporter {
                             mi.Mesh = MeshGenerator.Greedy(
                                 CombineObject(
                                     new() {
-                                        Chain = VoxUtils.EmptyList<VoxelNode>(),
+                                        Chain = [],
                                         VoxelObject = shape
                                     },
                                     frames,

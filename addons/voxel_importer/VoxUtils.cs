@@ -19,17 +19,11 @@ public static class VoxUtils {
         }
     }
 
-    public static List<T> EmptyList<T>() {
-        return [];
-    }
-
     public static string Dbg<T>(this List<T> list) => $"[{string.Join(", ", list)}]";
 
     public static string Dbg<TK, TV>(this Dictionary<TK, TV> d) where TK : notnull {
         return "{" + string.Join(", ", d) + "}";
     }
-
-    public static string Dbg(this Array array) => array.Cast<object>().ToList().Dbg();
 
     public static bool IsApprox(this float f1, float f2, float tolerance = 0.0001f) {
         return Math.Abs(f1 - f2) < tolerance;
@@ -44,10 +38,6 @@ public static class VoxUtils {
         foreach (var e in ie) action(e);
     }
 
-    public static bool IsNullOrBlank(this string? str) {
-        return string.IsNullOrEmpty(str) || str.Trim().Length == 0;
-    }
-
     public static bool IsEmpty<T>(this List<T> lst) => lst.Count == 0;
 
     public static void RecursiveChildren(this Node node, Action<Node> action) {
@@ -55,18 +45,6 @@ public static class VoxUtils {
             action.Invoke(node.GetChild(z));
             RecursiveChildren(node.GetChild(z), action);
         }
-    }
-
-    public static readonly Regex FrameRegex = new("Frame (\\d+)");
-
-    public static string SecondarySavePath(string path, string name, string ext) => $"{path}_{name}.{ext}";
-
-    public static VoxFile? ParseFile(string path) {
-        if (VoxelImporter.LoadFile(path, out var access) == Error.CantOpen) {
-            return null;
-        }
-
-        return VoxelImporter.Parse(access);
     }
 
 }
