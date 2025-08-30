@@ -10,9 +10,7 @@ namespace VoxelImporter.addons.voxel_importer.Importers;
 
 [Tool]
 public partial class MeshImporter : EditorImportPlugin {
-
-    private readonly Regex _frameRegex = new("Frame (\\d+)");
-
+    
     // Constants tm
     public override int _GetPresetCount() => 0;
     public override string _GetPresetName(int presetIndex) => "Unknown";
@@ -62,6 +60,7 @@ public partial class MeshImporter : EditorImportPlugin {
         var applyMaterials = options.ApplyMaterials();
         var groundOrigin = options.GroundOrigin();
         var ignoreTransforms = options.IgnoreTransforms();
+        var collisionType = options.CollisionGenerationType();
         var voxelObjects = vox.GatherObjects(includeInvisible);
         
         ObjectSelector objectSelection = objectName == ImportOptions.MergeAll
@@ -71,7 +70,7 @@ public partial class MeshImporter : EditorImportPlugin {
         KeyFrameSelector keyFrame =
             frameName == ImportOptions.MergeAll
                 ? new KeyFrameSelector.CombinedKeyFrame()
-                : new KeyFrameSelector.SpecificKeyFrames(_frameRegex.Match(frameName).Groups[1].Value.ToInt());
+                : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
 
         var primary = objectSelection.GetObjects(voxelObjects);
         Resource resource;
@@ -109,7 +108,7 @@ public partial class MeshImporter : EditorImportPlugin {
                     applyMaterials
                 );
                 
-                ResourceSaver.Save(mesh, Secondary(root, secondary.Name(), _GetSaveExtension()));
+                ResourceSaver.Save(mesh, VoxUtils.SecondarySavePath(root, secondary.Name(), _GetSaveExtension()));
             }
         }
 
@@ -124,5 +123,4 @@ public partial class MeshImporter : EditorImportPlugin {
         return VoxelImporter.Parse(access);
     }
 
-    private string Secondary(string path, string name, string ext) => $"{path}_{name}.{ext}";
 }

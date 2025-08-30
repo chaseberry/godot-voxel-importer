@@ -9,49 +9,23 @@ namespace VoxelImporter.addons.voxel_importer;
 [Tool]
 public partial class VoxelImporterPlugin : EditorPlugin {
 
-    private CombinedMeshImporter _cmi = null!;
-    private CombinedMeshLibraryImporter _cmli = null!;
-    private SeperateMeshImporter _smi = null!;
-    private SeperateMeshLibraryImporter _smli = null!;
-    private ObjectsAsMeshLibImporter _oami = null!;
-    private PackedSceneImporter _psi = null!;
     private MeshImporter _mi = null!;
+    private MeshLibraryImporter _mli = null!;
 
     public override void _EnterTree() {
-
-        _cmi = new();
-        _cmli = new();
-        _smi = new();
-        _smli = new();
-        _psi = new();
-        _oami = new();
+        _mli = new();
         _mi = new();
 
-        // AddImportPlugin(_cmi);
-        // AddImportPlugin(_cmli);
-        // AddImportPlugin(_oami);
-        // AddImportPlugin(_smi);
-        // AddImportPlugin(_smli);
-        // AddImportPlugin(_psi);
         AddImportPlugin(_mi);
+        AddImportPlugin(_mli);
     }
 
     public override void _ExitTree() {
-        // RemoveImportPlugin(_cmi);
-        // RemoveImportPlugin(_cmli);
-        // RemoveImportPlugin(_oami);
-        // RemoveImportPlugin(_smi);
-        // RemoveImportPlugin(_smli);
-        // RemoveImportPlugin(_psi);
         RemoveImportPlugin(_mi);
+        RemoveImportPlugin(_mli);
 
-        _cmi = null!;
-        _cmli = null!;
-        _oami = null!;
-        _smi = null!;
-        _smli = null!;
-        _psi = null!;
         _mi = null!;
+        _mli = null!;
     }
 
 }

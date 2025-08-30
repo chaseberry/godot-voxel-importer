@@ -21,6 +21,7 @@ public static class ImportOptions {
     public const string OutputHeaderOption = "remaining_objects/output_header";
     public const string PackedSceneLogicOption = "packed_scene_logic";
     public const string GenerateCollisionTypeOption = "generate_collision_type";
+    public const string MeshLibraryTypeOption = "mesh_library_type";
     public const string MergeAll = "Merge All";
 
     enum PackedSceneValues {
@@ -109,7 +110,7 @@ public static class ImportOptions {
         ["default_value"] = "Smart Objects",
         ["description"] = "How to handle making packed scenes",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = string.Join(",", Enum.GetValues(typeof(PackedSceneValues)))
+        ["hint_string"] = string.Join(",", Enum.GetValues<PackedSceneValues>())
     };
 
     public static Dictionary GenerateCollisionType() => new() {
@@ -117,7 +118,7 @@ public static class ImportOptions {
         ["default_value"] = "None",
         ["description"] = "Generate collision type",
         ["property_hint"] = (int)PropertyHint.Enum,
-        ["hint_string"] = string.Join(",", Enum.GetValues(typeof(CollisionGenerationType)))
+        ["hint_string"] = string.Join(",", Enum.GetValues<CollisionGenerationType>())
     };
 
     public static Dictionary? Object(VoxFile? vox) {
@@ -165,6 +166,17 @@ public static class ImportOptions {
         );
     }
 
+    public static Dictionary MeshLibraryType() => Option(
+        MeshLibraryTypeOption,
+        "",
+        nameof(MeshLibraryTypeEnum.Animation),
+        (int)PropertyHint.Enum,
+        string.Join(
+            ",",
+            Enum.GetValues<MeshLibraryTypeEnum>()
+        )
+    );
+
     public static float GetFloat(Dictionary options, string key, float defaultValue) {
         if (!options.TryGetValue(key, out var floatValue)) {
             floatValue = defaultValue;
@@ -189,6 +201,9 @@ public static class ImportOptions {
         return stringValue.AsString();
     }
 
+    public static T GetEnum<T>(Dictionary options, string key, T defaultValue) where T : Enum {
+        return (T)Enum.Parse(typeof(T), GetString(options, key, defaultValue.ToString()), true);
+    }
 
     public static bool MergeFrames(this Dictionary options) {
         if (!options.TryGetValue("Merge All Frames", out var merge)) {
@@ -212,8 +227,9 @@ public static class ImportOptions {
 
     public static bool ApplyMaterials(this Dictionary options) => GetBool(options, ApplyMaterialsOption, false);
 
-    public static bool ExportRemaining(this Dictionary options) => GetBool(options, ExportRemainingObjectsOption, false);
-    
+    public static bool ExportRemaining(this Dictionary options) =>
+        GetBool(options, ExportRemainingObjectsOption, false);
+
     public static string OutputPath(this Dictionary options, string sourcePath) {
         if (!options.TryGetValue(OutputDirectoryOption, out var dir)) {
             dir = sourcePath.Replace(sourcePath.GetFile(), "");

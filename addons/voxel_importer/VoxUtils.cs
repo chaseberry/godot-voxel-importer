@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Godot;
 
 namespace VoxelImporter.addons.voxel_importer;
@@ -54,4 +55,9 @@ public static class VoxUtils {
             RecursiveChildren(node.GetChild(z), action);
         }
     }
+
+    public static readonly Regex FrameRegex = new("Frame (\\d+)");
+
+    public static string SecondarySavePath(string path, string name, string ext) => $"{path}_{name}.{ext}";
+
 }

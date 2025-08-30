@@ -45,12 +45,7 @@
     <Content Include="addons\voxel_importer\Functions\SearchedVoxelObject.cs.uid" />
     <Content Include="addons\voxel_importer\Functions\VoxelCuller.cs.uid" />
     <Content Include="addons\voxel_importer\Functions\VoxelImporter.cs.uid" />
-    <Content Include="addons\voxel_importer\Importers\CombinedMeshImporter.cs.uid" />
-    <Content Include="addons\voxel_importer\Importers\CombinedMeshLibraryImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\ImportOptions.cs.uid" />
-    <Content Include="addons\voxel_importer\Importers\ObjectsAsMeshLibImporter.cs.uid" />
     <Content Include="addons\voxel_importer\Importers\PackedSceneImporter.cs.uid" />
-    <Content Include="addons\voxel_importer\Importers\SeperateMeshImporter.cs.uid" />
-    <Content Include="addons\voxel_importer\Importers\SeperateMeshLibraryImporter.cs.uid" />
   </ItemGroup>
 </Project>
