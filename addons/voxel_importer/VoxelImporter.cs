@@ -81,15 +81,6 @@ public static class VoxelImporter {
         return combiner.GetResult();
     }
 
-    private static List<VoxelModel> CombinedMeshLibrary(
-        VoxFile vox,
-        bool includeHidden,
-        bool ignoreTransforms
-    ) {
-        var frames = vox.GetFrameIndexes();
-        return AnimationLibrary(vox.GatherObjects(includeHidden), frames, ignoreTransforms);
-    }
-
     public static List<VoxelModel> AnimationLibrary(
         List<SearchedVoxelObject> models,
         List<int> frames,
@@ -126,7 +117,7 @@ public static class VoxelImporter {
         return results;
     }
 
-    public static List<VoxelModel> SeparateMeshes(
+    public static List<VoxelModel> SeparateObjects(
         VoxFile vox,
         KeyFrameSelector keySelector,
         bool includeHidden,

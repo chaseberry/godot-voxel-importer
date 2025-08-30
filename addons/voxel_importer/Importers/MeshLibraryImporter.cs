@@ -123,7 +123,7 @@ public partial class MeshLibraryImporter : EditorImportPlugin {
                 : new KeyFrameSelector.SpecificKeyFrames(VoxUtils.FrameRegex.Match(frameName).Groups[1].Value.ToInt());
 
         return VoxelImporter.BuildMeshLibrary(
-            VoxelImporter.SeparateMeshes(vox, keyFrame, options.IncludeInvisible(), options.IgnoreTransforms()),
+            VoxelImporter.SeparateObjects(vox, keyFrame, options.IncludeInvisible(), options.IgnoreTransforms()),
             options.GetScale(),
             options.GroundOrigin(),
             options.ApplyMaterials(),
